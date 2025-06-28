@@ -1,7 +1,6 @@
 "use client";
 
-import { ModeToggle } from "@/components/mode-toggle";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,26 +9,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
-  Activity,
-  Award,
   Brain,
-  Calendar,
-  ChevronRight,
   Heart,
+  Stethoscope,
+  Calendar,
+  Shield,
+  Zap,
+  Users,
+  Award,
+  ChevronRight,
   Menu,
+  X,
+  Sun,
+  Moon,
+  Activity,
   Pill,
   Scan,
-  Shield,
-  Stethoscope,
   Target,
-  Users,
-  X,
-  Zap,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const translations = {
   nav: {
@@ -86,7 +87,8 @@ const translations = {
   },
   mission: {
     title: "Our Mission",
-    subtitle: "Making healthcare accessible, intelligent, and patient-centered",
+    subtitle:
+      "Making healthcare accessible, intelligent, and patient-centered",
     description:
       "We believe everyone deserves access to advanced healthcare technology. Our AI-driven platform democratizes medical expertise, providing instant insights and connecting patients with the care they need.",
     stats: [
@@ -214,7 +216,18 @@ export default function IntelliCureLanding() {
             {/* Controls */}
             <div className="flex items-center space-x-2">
               {/* Theme Toggle */}
-              <ModeToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </Button>
+
               {/* Auth Buttons */}
               <div className="hidden md:flex items-center space-x-2">
                 <Button
