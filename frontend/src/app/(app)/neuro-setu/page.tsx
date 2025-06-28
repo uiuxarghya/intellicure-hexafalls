@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,6 +25,7 @@ import {
 import { useTheme } from "next-themes";
 import type React from "react";
 import { useCallback, useState } from "react";
+import Markdown from "react-markdown";
 
 interface UploadState {
   file: File | null;
@@ -424,17 +426,32 @@ export default function NeuroSetuApp() {
                       >
                         View Full Medical Report
                       </summary>
-                      <pre
+                      <div
                         className={`whitespace-pre-wrap text-sm mt-4 ${secondaryText}`}
                       >
-                        {analysisResult.insights}
-                      </pre>
+                        <Markdown>{analysisResult.insights}</Markdown>
+                      </div>
                     </details>
                   </div>
                 ) : (
                   <p className={secondaryText}>No result available yet.</p>
                 )}
               </CardContent>
+              {analysisResult &&
+                ["glioma", "meningioma", "pituitary"].includes(
+                  analysisResult.predictedClass.toLowerCase()
+                ) && (
+                  <CardFooter className="flex justify-between items-center">
+                    <Button
+                      onClick={() => {
+                        window.location.href = "/appointments";
+                      }}
+                      className="w-full"
+                    >
+                      Book Appointment
+                    </Button>
+                  </CardFooter>
+                )}
             </Card>
           )}
         </div>
