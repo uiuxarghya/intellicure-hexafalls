@@ -2,14 +2,13 @@
 
 import {
   IconBrain,
-  IconCalendarClock,
   IconDashboard,
+  IconDna2,
   IconHelp,
   IconLungs,
-  IconPrescription,
-  IconReportMedical,
+  IconPillFilled,
   IconSettings,
-  IconUserQuestion,
+  IconStethoscope
 } from "@tabler/icons-react";
 import * as React from "react";
 
@@ -37,23 +36,23 @@ const data = {
     {
       title: "Appointments",
       url: "/appointments",
-      icon: IconCalendarClock,
+      icon: IconStethoscope,
     },
     {
-      title: "ArthaMed",
+      title: "Artha Med",
       url: "/arthamed",
-      icon: IconPrescription,
+      icon: IconPillFilled,
     },
     {
       title: "Smritiyaan",
       url: "/smritiyan",
-      icon: IconUserQuestion,
+      icon: IconBrain,
     },
-    {
-      title: "Rog Dristi",
-      url: "/rog-dristi",
-      icon: IconReportMedical,
-    },
+    // {
+    //   title: "Rog Drishti",
+    //   url: "/rog-drishti",
+    //   icon: IconHeartbeat,
+    // },
     {
       title: "Shwaas Veda",
       url: "/shwaas-veda",
@@ -62,7 +61,7 @@ const data = {
     {
       title: "Neuro Setu",
       url: "/neuro-setu",
-      icon: IconBrain,
+      icon: IconDna2,
     },
   ],
   navSecondary: [
