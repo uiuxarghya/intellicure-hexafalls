@@ -2,7 +2,13 @@
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
   Activity,
@@ -11,9 +17,10 @@ import {
   Brain,
   CheckCircle,
   FileImage,
-  Upload
+  Upload,
 } from "lucide-react";
 import { useCallback, useState } from "react";
+import Markdown from "react-markdown";
 
 interface UploadState {
   file: File | null;
@@ -36,7 +43,9 @@ export default function SmritiyanApp() {
     status: "idle",
   });
   const [isDragOver, setIsDragOver] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+    null
+  );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleFileSelect = useCallback((file: File) => {
@@ -142,7 +151,8 @@ export default function SmritiyanApp() {
   };
 
   const getUploadAreaClasses = () => {
-    const baseClasses = "relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200";
+    const baseClasses =
+      "relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200";
 
     if (isDragOver)
       return `${baseClasses} border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20`;
@@ -152,7 +162,7 @@ export default function SmritiyanApp() {
   };
 
   const getStageColorClasses = (stage: string) => {
-    switch(stage) {
+    switch (stage) {
       case "Non Demented":
         return {
           bg: "bg-green-50 dark:bg-green-900/20",
@@ -160,7 +170,7 @@ export default function SmritiyanApp() {
           text: "text-green-800 dark:text-green-300",
           icon: "text-green-600 dark:text-green-400",
           cardBg: "bg-green-100 dark:bg-green-900/30",
-          cardBorder: "border-green-300 dark:border-green-700"
+          cardBorder: "border-green-300 dark:border-green-700",
         };
       case "Very Mild Dementia":
         return {
@@ -169,7 +179,7 @@ export default function SmritiyanApp() {
           text: "text-yellow-800 dark:text-yellow-300",
           icon: "text-yellow-600 dark:text-yellow-400",
           cardBg: "bg-yellow-100 dark:bg-yellow-900/30",
-          cardBorder: "border-yellow-300 dark:border-yellow-700"
+          cardBorder: "border-yellow-300 dark:border-yellow-700",
         };
       case "Mild Dementia":
         return {
@@ -178,16 +188,16 @@ export default function SmritiyanApp() {
           text: "text-orange-800 dark:text-orange-300",
           icon: "text-orange-600 dark:text-orange-400",
           cardBg: "bg-orange-100 dark:bg-orange-900/30",
-          cardBorder: "border-orange-300 dark:border-orange-700"
+          cardBorder: "border-orange-300 dark:border-orange-700",
         };
-      default: 
+      default:
         return {
           bg: "bg-red-50 dark:bg-red-900/20",
           border: "border-red-200 dark:border-red-800",
           text: "text-red-800 dark:text-red-300",
           icon: "text-red-600 dark:text-red-400",
           cardBg: "bg-red-100 dark:bg-red-900/30",
-          cardBorder: "border-red-300 dark:border-red-700"
+          cardBorder: "border-red-300 dark:border-red-700",
         };
     }
   };
@@ -198,10 +208,12 @@ export default function SmritiyanApp() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12 w-full max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold text-foreground dark:text-zinc-300 mb-4">
-              <span className="text-pink-600">Smritiyan</span> – Alzheimer&apos;s Grading via MRI Analysis
+              <span className="text-pink-600">Smritiyan</span> –
+              Alzheimer&apos;s Grading via MRI Analysis
             </h2>
             <p className="text-xl text-muted-foreground mb-8 mt-8">
-              Streamline dementia diagnosis: Upload brain scans for instant, AI-powered Alzheimer&apos;s staging with clinical-grade accuracy.
+              Streamline dementia diagnosis: Upload brain scans for instant,
+              AI-powered Alzheimer&apos;s staging with clinical-grade accuracy.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mb-8">
@@ -323,7 +335,9 @@ export default function SmritiyanApp() {
                     <Alert className="bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800">
                       <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                       <AlertDescription className="text-emerald-700 dark:text-emerald-300">
-                        {isAnalyzing ? "Analyzing image..." : "Upload completed!"}
+                        {isAnalyzing
+                          ? "Analyzing image..."
+                          : "Upload completed!"}
                       </AlertDescription>
                     </Alert>
                   )}
@@ -361,7 +375,10 @@ export default function SmritiyanApp() {
               <CardContent>
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-full bg-zinc-200 dark:bg-zinc-700 h-2 rounded-full overflow-hidden">
-                    <div className="bg-emerald-500 dark:bg-emerald-400 h-full animate-pulse" style={{ width: '100%' }}></div>
+                    <div
+                      className="bg-emerald-500 dark:bg-emerald-400 h-full animate-pulse"
+                      style={{ width: "100%" }}
+                    ></div>
                   </div>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
                     Processing MRI scan for Alzheimer&apos;s biomarkers...
@@ -372,10 +389,16 @@ export default function SmritiyanApp() {
           )}
 
           {analysisResult && !isAnalyzing && (
-            <Card className={`shadow-md mt-6 border-0 ${getStageColorClasses(analysisResult.predictedClass).bg} ${getStageColorClasses(analysisResult.predictedClass).border}`}>
+            <Card
+              className="shadow-md mt-6 border-0 bg-card dark:bg-card/80"
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Brain className={`w-5 h-5 ${getStageColorClasses(analysisResult.predictedClass).icon}`} />
+                  <Brain
+                    className={`w-5 h-5 ${
+                      getStageColorClasses(analysisResult.predictedClass).icon
+                    }`}
+                  />
                   <span>Analysis Result</span>
                 </CardTitle>
               </CardHeader>
@@ -386,8 +409,21 @@ export default function SmritiyanApp() {
                   </p>
                 ) : (
                   <div className="space-y-4">
-                    <div className={`p-4 rounded-lg border ${getStageColorClasses(analysisResult.predictedClass).cardBg} ${getStageColorClasses(analysisResult.predictedClass).cardBorder}`}>
-                      <h3 className={`text-lg font-semibold ${getStageColorClasses(analysisResult.predictedClass).text}`}>
+                    <div
+                      className={`p-4 rounded-lg border ${
+                        getStageColorClasses(analysisResult.predictedClass)
+                          .cardBg
+                      } ${
+                        getStageColorClasses(analysisResult.predictedClass)
+                          .cardBorder
+                      }`}
+                    >
+                      <h3
+                        className={`text-lg font-semibold ${
+                          getStageColorClasses(analysisResult.predictedClass)
+                            .text
+                        }`}
+                      >
                         Diagnosis
                       </h3>
                       <p className="text-zinc-700 dark:text-zinc-300">
@@ -396,7 +432,12 @@ export default function SmritiyanApp() {
                       </p>
                       <p className="text-zinc-600 dark:text-zinc-400">
                         <span className="font-medium">Confidence:</span>{" "}
-                        {(analysisResult.confidences[analysisResult.predictedClass] * 100).toFixed(2)}%
+                        {(
+                          analysisResult.confidences[
+                            analysisResult.predictedClass
+                          ] * 100
+                        ).toFixed(2)}
+                        %
                       </p>
                     </div>
 
@@ -404,13 +445,30 @@ export default function SmritiyanApp() {
                       <summary className="cursor-pointer font-semibold">
                         View Full Medical Report
                       </summary>
-                      <pre className="whitespace-pre-wrap text-sm mt-4 text-zinc-700 dark:text-zinc-300">
-                        {analysisResult.insights}
-                      </pre>
+                      <div className="whitespace-pre-wrap text-sm mt-4 text-zinc-700 dark:text-zinc-300">
+                        <Markdown>{analysisResult.insights}</Markdown>
+                      </div>
                     </details>
                   </div>
                 )}
               </CardContent>
+              {analysisResult &&
+                [
+                  "Mild Dementia",
+                  "Moderate Dementia",
+                  "Very Mild Dementia",
+                ].includes(analysisResult.predictedClass) && (
+                  <CardFooter className="flex justify-between items-center">
+                    <Button
+                      onClick={() => {
+                        window.location.href = "/appointments";
+                      }}
+                      className="w-full"
+                    >
+                      Book Appointment
+                    </Button>
+                  </CardFooter>
+                )}
             </Card>
           )}
         </div>
