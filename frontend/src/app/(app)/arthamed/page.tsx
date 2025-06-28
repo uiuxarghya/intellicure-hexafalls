@@ -291,7 +291,7 @@ export default function HomePage() {
             <h3 className="text-2xl font-bold text-green-700 dark:text-green-400">
               Analysis Results
             </h3>
-            <div className="text-xs whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">
+            <div className="text-sm whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">
               <Markdown>{analysisResult.summary}</Markdown>
             </div>
 
