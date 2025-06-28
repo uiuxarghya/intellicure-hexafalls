@@ -20,7 +20,16 @@ export default function PatientAppointments({ patientId }: Props) {
     async function fetchAppointments() {
       try {
         const data = await getPatientAppointments(patientId);
-        setAppointments(data);
+        // Ensure doctor.name and doctor.specilization are always strings
+        const sanitizedData = data.map((appt) => ({
+          ...appt,
+          doctor: {
+            ...appt.doctor,
+            name: appt.doctor.name ?? "",
+            specilization: appt.doctor.specilization ?? "",
+          },
+        }));
+        setAppointments(sanitizedData);
       } catch (error) {
         console.error("Error fetching appointments:", error);
       } finally {
@@ -44,20 +53,21 @@ export default function PatientAppointments({ patientId }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="flex flex-col gap-4">
+      <h2 className="text-xl font-bold mb-1">Your Appointments</h2>
       {appointments.map((appt) => {
         const isPast = new Date(appt.scheduledAt) < new Date();
         const dateStr = format(new Date(appt.scheduledAt), "PPPPp");
 
         return (
-          <Card key={appt.id} className="border-muted rounded-2xl">
+          <Card key={appt.id} className="border-muted rounded-2xl bg-muted">
             <CardHeader>
               <CardTitle className="text-base">
                 Appointment with{" "}
                 <span className="font-semibold">{appt.doctor.name}</span>
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                {appt.doctor.email}
+                {appt.doctor.specilization}
               </p>
             </CardHeader>
             <CardContent className="space-y-2">
