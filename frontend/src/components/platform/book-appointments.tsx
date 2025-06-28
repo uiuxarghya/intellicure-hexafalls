@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { createAppointment } from "@/actions/appointments"; // adjust import
 import { toast } from "sonner";
 import { Doctor } from "@/types/doctors";
+import { Textarea } from "../ui/textarea";
 
 type Props = {
   patientId: string;
@@ -25,6 +26,7 @@ export default function BookAppointmentForm({ patientId, doctors }: Props) {
   const [selectedDoctor, setSelectedDoctor] = useState<string>("");
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>("");
+  const [notes, setNotes] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +42,7 @@ export default function BookAppointmentForm({ patientId, doctors }: Props) {
     scheduledAt.setMinutes(minutes);
 
     try {
-      await createAppointment(patientId, selectedDoctor, scheduledAt);
+      await createAppointment(patientId, selectedDoctor, scheduledAt, notes);
       toast.success("Appointment booked successfully!");
     } catch {
       toast.error("Failed to book appointment. Please try again.");
@@ -50,7 +52,7 @@ export default function BookAppointmentForm({ patientId, doctors }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 p-6 max-w-md border rounded-2xl shadow-sm bg-white dark:bg-zinc-950"
+      className="space-y-4 p-6 w-full border rounded-2xl shadow-sm bg-muted"
     >
       <div>
         <Label htmlFor="doctor">Select Doctor</Label>
@@ -63,7 +65,7 @@ export default function BookAppointmentForm({ patientId, doctors }: Props) {
           <option value="">-- Choose a doctor --</option>
           {doctors.map((doc) => (
             <option key={doc.id} value={doc.id}>
-              {doc.name} ({doc.email})
+              {doc.name} ({doc.specilization || "General Practitioner"})
             </option>
           ))}
         </select>
@@ -88,7 +90,6 @@ export default function BookAppointmentForm({ patientId, doctors }: Props) {
               mode="single"
               selected={date}
               onSelect={setDate}
-              initialFocus
               disabled={(date) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -115,6 +116,17 @@ export default function BookAppointmentForm({ patientId, doctors }: Props) {
           value={time}
           onChange={(e) => setTime(e.target.value)}
           required
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="notes">Additional Notes (optional)</Label>
+        <Textarea
+          id="notes"
+          placeholder="Any specific concerns or questions?"
+          className="mt-1"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
         />
       </div>
 
