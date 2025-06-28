@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,12 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Shield, Upload, Users, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
+import { AnalysisProgress } from "@/components/arthamed/analysis-progress";
 import { FileUpload } from "@/components/arthamed/file-upload";
 import { UploadedFiles } from "@/components/arthamed/uploaded-files";
-import { AnalysisProgress } from "@/components/arthamed/analysis-progress";
 import { analyzeMedicalImage } from "@/lib/gemini";
 import Markdown from "react-markdown";
 
@@ -164,6 +164,29 @@ export default function HomePage() {
       }
 
       setAnalysisResult({ summary: summaryText, keyFindings: [] });
+
+      try {
+        await fetch("/api/textreport", {
+          method: "POST",
+          body: JSON.stringify({
+            inputType: "PRESCRIPTION",
+            prediction: condition,
+            confidence: parseFloat(confidence),
+            fullReport: response,
+            fileName: file.name,
+            fileUrl: file.preview,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        toast.success("Report saved");
+      } catch (err) {
+        if (err instanceof Error) {
+          toast.error(`Failed to save report: ${err.message}`);
+        }
+      }
+
       setAnalysisComplete(true);
       setRedirectRoute(redirect !== "None" ? redirect : null);
 
