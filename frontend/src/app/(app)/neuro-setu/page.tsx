@@ -12,12 +12,16 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
+  Activity,
   AlertCircle,
+  AlertOctagon,
   Brain,
   CheckCircle,
   FileImage,
+  ScanEye,
   Upload,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import type React from "react";
 import { useCallback, useState } from "react";
 
@@ -36,6 +40,7 @@ interface AnalysisResult {
 }
 
 export default function NeuroSetuApp() {
+  const { theme } = useTheme();
   const [uploadState, setUploadState] = useState<UploadState>({
     file: null,
     progress: 0,
@@ -46,6 +51,28 @@ export default function NeuroSetuApp() {
     null
   );
   const [isLoadingResult, setIsLoadingResult] = useState(false);
+
+  // Theme-aware colors
+  const containerBg =
+    theme === "dark"
+      ? "bg-gradient-to-br from-background to-background"
+      : "bg-gradient-to-br from-zinc-50 to-zinc-100";
+
+  const cardBg = theme === "dark" ? "bg-zinc-800" : "bg-zinc-200";
+  const cardBorder = theme === "dark" ? "border-zinc-700" : "border-zinc-300";
+  const primaryText = theme === "dark" ? "text-zinc-100" : "text-zinc-800";
+  const secondaryText = theme === "dark" ? "text-zinc-300" : "text-zinc-600";
+  const hoverBorder =
+    theme === "dark" ? "hover:border-emerald-500" : "hover:border-emerald-300";
+  const dragBg = theme === "dark" ? "bg-zinc-700" : "bg-zinc-50";
+  const errorBorder = theme === "dark" ? "border-red-500" : "border-red-300";
+  const errorBg = theme === "dark" ? "bg-red-900/30" : "bg-red-50";
+  const successBorder =
+    theme === "dark" ? "border-emerald-500" : "border-emerald-200";
+  const successBg = theme === "dark" ? "bg-emerald-900/30" : "bg-emerald-50";
+  const resultBg = theme === "dark" ? "bg-zinc-700" : "bg-emerald-50";
+  const resultBorder =
+    theme === "dark" ? "border-emerald-600" : "border-emerald-200";
 
   const handleFileSelect = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -171,24 +198,65 @@ export default function NeuroSetuApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className={`min-h-screen ${containerBg}`}>
       <main className="container mx-auto px-4 py-12">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Neuro Setu – Brain Tumor Classification
+            <h2 className={`text-4xl font-bold ${primaryText} mb-4`}>
+              <span className="text-purple-600">Neuro Setu</span> – Automated
+              Brain Tumor Recognition
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed">
-              Upload your MRI brain scan to detect tumor types using AI.
+            <p className={`text-lg ${secondaryText} leading-relaxed`}>
+              Cutting-edge AI for automated brain tumor detection in MRI images.
             </p>
           </div>
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {[
+              {
+                icon: <Brain className="w-4 h-4 text-white" />,
+                label: "Neurologist-Level Accuracy",
+                bgColor: "bg-indigo-600 dark:bg-indigo-700",
+                hoverColor: "hover:bg-indigo-700 dark:hover:bg-indigo-800",
+                borderColor: "border-indigo-600 dark:border-indigo-700",
+              },
+              {
+                icon: <Activity className="w-4 h-4 text-white" />,
+                label: "Brain Activity Analysis",
+                bgColor: "bg-purple-600 dark:bg-purple-700",
+                hoverColor: "hover:bg-purple-700 dark:hover:bg-purple-800",
+                borderColor: "border-purple-600 dark:border-purple-700",
+              },
+              {
+                icon: <AlertOctagon className="w-4 h-4 text-white" />,
+                label: "Tumor Detection",
+                bgColor: "bg-rose-600 dark:bg-rose-700",
+                hoverColor: "hover:bg-rose-700 dark:hover:bg-rose-800",
+                borderColor: "border-rose-600 dark:border-rose-700",
+              },
+              {
+                icon: <ScanEye className="w-4 h-4 text-white" />,
+                label: "MRI Scan Analysis",
+                bgColor: "bg-teal-600 dark:bg-teal-700",
+                hoverColor: "hover:bg-teal-700 dark:hover:bg-teal-800",
+                borderColor: "border-teal-600 dark:border-teal-700",
+              },
+            ].map(({ icon, label, bgColor, hoverColor, borderColor }, i) => (
+              <div
+                key={i}
+                className={`flex items-center space-x-2 ${bgColor} ${hoverColor} ${borderColor} rounded-full px-4 py-2 shadow-sm border transition-colors duration-200 cursor-default`}
+              >
+                {icon}
+                <span className="text-sm font-medium text-white">{label}</span>
+              </div>
+            ))}
+          </div>
 
-          <Card className="shadow-lg border-0 bg-white">
+          <Card className={`shadow-lg border-0 ${cardBg}`}>
             <CardHeader className="text-center">
-              <CardTitle className="text-xl text-slate-800">
+              <CardTitle className={`text-xl ${primaryText}`}>
                 MRI Image Upload
               </CardTitle>
-              <CardDescription className="text-slate-600">
+              <CardDescription className={secondaryText}>
                 Supported formats: JPEG, PNG. Max size: 50MB
               </CardDescription>
             </CardHeader>
@@ -197,10 +265,10 @@ export default function NeuroSetuApp() {
                 className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200
                   ${
                     isDragOver
-                      ? "border-emerald-400 bg-emerald-50"
+                      ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-900/30"
                       : uploadState.status === "error"
-                      ? "border-red-300 bg-red-50"
-                      : "border-slate-300 bg-slate-50 hover:border-emerald-300 hover:bg-emerald-50"
+                      ? `${errorBorder} ${errorBg}`
+                      : `${cardBorder} ${dragBg} ${hoverBorder}`
                   }`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -220,12 +288,12 @@ export default function NeuroSetuApp() {
                 <div className="space-y-4">
                   {uploadState.file ? (
                     <div className="flex items-center justify-center gap-3">
-                      <FileImage className="w-8 h-8 text-emerald-600" />
+                      <FileImage className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                       <div className="text-left">
-                        <p className="font-medium text-slate-900">
+                        <p className={`font-medium ${primaryText}`}>
                           {uploadState.file.name}
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className={`text-sm ${secondaryText}`}>
                           {(uploadState.file.size / (1024 * 1024)).toFixed(2)}{" "}
                           MB
                         </p>
@@ -233,12 +301,14 @@ export default function NeuroSetuApp() {
                     </div>
                   ) : (
                     <>
-                      <Upload className="w-12 h-12 text-slate-400 mx-auto" />
+                      <Upload className="w-12 h-12 text-zinc-400 dark:text-zinc-500 mx-auto" />
                       <div>
-                        <p className="text-lg font-medium text-slate-700 mb-2">
+                        <p
+                          className={`text-lg font-medium ${primaryText} mb-2`}
+                        >
                           Drop your MRI brain scan here
                         </p>
-                        <p className="text-slate-500">
+                        <p className={secondaryText}>
                           or click to browse files
                         </p>
                       </div>
@@ -248,9 +318,9 @@ export default function NeuroSetuApp() {
               </div>
 
               {uploadState.status === "error" && uploadState.error && (
-                <Alert className="border-red-200 bg-red-50">
-                  <AlertCircle className="h-4 w-4 text-red-600" />
-                  <AlertDescription className="text-red-700">
+                <Alert className={`${errorBorder} ${errorBg}`}>
+                  <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                  <AlertDescription className="text-red-700 dark:text-red-300">
                     {uploadState.error}
                   </AlertDescription>
                 </Alert>
@@ -261,8 +331,8 @@ export default function NeuroSetuApp() {
                   {uploadState.status === "uploading" && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-600">Uploading...</span>
-                        <span className="text-slate-600">
+                        <span className={secondaryText}>Uploading...</span>
+                        <span className={secondaryText}>
                           {Math.round(uploadState.progress)}%
                         </span>
                       </div>
@@ -271,9 +341,9 @@ export default function NeuroSetuApp() {
                   )}
 
                   {uploadState.status === "completed" && (
-                    <Alert className="border-emerald-200 bg-emerald-50">
-                      <CheckCircle className="h-4 w-4 text-emerald-600" />
-                      <AlertDescription className="text-emerald-700">
+                    <Alert className={`${successBorder} ${successBg}`}>
+                      <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <AlertDescription className="text-emerald-700 dark:text-emerald-300">
                         Upload completed! The AI is analyzing your image...
                       </AlertDescription>
                     </Alert>
@@ -283,7 +353,7 @@ export default function NeuroSetuApp() {
                     {uploadState.status === "idle" && (
                       <Button
                         onClick={simulateUpload}
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
                       >
                         <Upload className="w-4 h-4 mr-2" />
                         Start Analysis
@@ -305,33 +375,37 @@ export default function NeuroSetuApp() {
           </Card>
 
           {uploadState.status === "completed" && (
-            <Card className="shadow-md mt-6 border-0 bg-white">
+            <Card className={`shadow-md mt-6 border-0 ${cardBg}`}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-slate-800">
-                  <Brain className="w-5 h-5 text-emerald-600" />
+                <CardTitle className={`flex items-center gap-2 ${primaryText}`}>
+                  <Brain className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                   Analysis Result
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {isLoadingResult ? (
-                  <p className="text-slate-600 animate-pulse">
+                  <p className={`${secondaryText} animate-pulse`}>
                     Analyzing image, please wait...
                   </p>
                 ) : analysisResult?.error ? (
-                  <p className="text-red-600">{analysisResult.error}</p>
+                  <p className="text-red-600 dark:text-red-400">
+                    {analysisResult.error}
+                  </p>
                 ) : analysisResult ? (
                   <div className="space-y-4">
-                    <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
-                      <h3 className="text-lg font-semibold text-emerald-700">
+                    <div
+                      className={`p-4 ${resultBg} border ${resultBorder} rounded-lg`}
+                    >
+                      <h3 className={`text-lg font-semibold ${primaryText}`}>
                         Diagnosis
                       </h3>
-                      <p className="text-slate-700">
+                      <p className={primaryText}>
                         <span className="font-medium">
                           Predicted Tumor Type:
                         </span>{" "}
                         {analysisResult.predictedClass}
                       </p>
-                      <p className="text-slate-600">
+                      <p className={secondaryText}>
                         <span className="font-medium">Confidence:</span>{" "}
                         {(
                           analysisResult.confidences?.[
@@ -342,17 +416,23 @@ export default function NeuroSetuApp() {
                       </p>
                     </div>
 
-                    <details className="bg-white border border-slate-200 rounded-lg p-4">
-                      <summary className="cursor-pointer text-slate-800 font-semibold text-base">
+                    <details
+                      className={`${cardBg} border ${cardBorder} rounded-lg p-4`}
+                    >
+                      <summary
+                        className={`cursor-pointer ${primaryText} font-semibold text-base`}
+                      >
                         View Full Medical Report
                       </summary>
-                      <pre className="whitespace-pre-wrap text-sm mt-4 text-slate-700">
+                      <pre
+                        className={`whitespace-pre-wrap text-sm mt-4 ${secondaryText}`}
+                      >
                         {analysisResult.insights}
                       </pre>
                     </details>
                   </div>
                 ) : (
-                  <p className="text-slate-500">No result available yet.</p>
+                  <p className={secondaryText}>No result available yet.</p>
                 )}
               </CardContent>
             </Card>
