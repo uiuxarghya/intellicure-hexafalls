@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "IntelliCure",
-  description: "IntelliCure - Your AI-Powered Healthcare Assistant",
+  description: "IntelliCure - Your AI-Powered Healthcare Companion",
 };
 
 export default function RootLayout({
@@ -35,6 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
