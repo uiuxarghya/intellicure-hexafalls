@@ -2,7 +2,13 @@
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { IconLungs } from "@tabler/icons-react";
 import {
@@ -15,7 +21,7 @@ import {
   Upload,
 } from "lucide-react";
 import { useCallback, useState } from "react";
-
+import Markdown from "react-markdown";
 interface UploadState {
   file: File | null;
   progress: number;
@@ -151,7 +157,7 @@ export default function ShwaasVedaApp() {
       return `${baseClasses} border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20`;
     if (uploadState.status === "error")
       return `${baseClasses} border-red-300 bg-red-50 dark:bg-red-900/20`;
-    return `${baseClasses} border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 hover:border-emerald-300 dark:hover:border-emerald-500`;
+    return `${baseClasses} border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 hover:border-emerald-300 dark:hover:border-emerald-500`;
   };
 
   // const getResultCardClasses = (prediction: string) => {
@@ -225,10 +231,10 @@ export default function ShwaasVedaApp() {
 
           <Card className="shadow-md border-0 bg-card dark:bg-card/80 max-w-3xl mx-auto">
             <CardHeader className="text-center">
-              <CardTitle className="text-xl text-slate-800 dark:text-white">
+              <CardTitle className="text-xl text-zinc-800 dark:text-white">
                 Chest X-Ray Image Upload
               </CardTitle>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 Supported formats: JPEG, PNG | Max size: 10MB
               </p>
             </CardHeader>
@@ -259,22 +265,22 @@ export default function ShwaasVedaApp() {
                   <div className="flex items-center justify-center gap-3">
                     <FileImage className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
                     <div className="text-left">
-                      <p className="font-medium text-slate-900 dark:text-white">
+                      <p className="font-medium text-zinc-900 dark:text-white">
                         {uploadState.file.name}
                       </p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
                         {(uploadState.file.size / (1024 * 1024)).toFixed(2)} MB
                       </p>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <Upload className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto" />
+                    <Upload className="w-12 h-12 text-zinc-400 dark:text-zinc-500 mx-auto" />
                     <div>
-                      <p className="text-lg font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      <p className="text-lg font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                         Drop your Chest X-Ray image here
                       </p>
-                      <p className="text-slate-500 dark:text-slate-400">
+                      <p className="text-zinc-500 dark:text-zinc-400">
                         or click to browse files
                       </p>
                     </div>
@@ -293,7 +299,7 @@ export default function ShwaasVedaApp() {
                 <div className="space-y-4">
                   {uploadState.status === "uploading" && (
                     <div className="space-y-2">
-                      <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+                      <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400">
                         <span>Uploading...</span>
                         <span>{Math.round(uploadState.progress)}%</span>
                       </div>
@@ -333,7 +339,7 @@ export default function ShwaasVedaApp() {
           </Card>
 
           {uploadState.status === "completed" && (
-            <Card className="shadow-md mt-6 border-0 bg-white dark:bg-slate-800">
+            <Card className="shadow-md mt-6 border-0 bg-white dark:bg-zinc-800">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Brain className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
@@ -342,7 +348,7 @@ export default function ShwaasVedaApp() {
               </CardHeader>
               <CardContent>
                 {isLoadingResult ? (
-                  <p className="text-slate-600 dark:text-slate-400 animate-pulse">
+                  <p className="text-zinc-600 dark:text-zinc-400 animate-pulse">
                     Analyzing image, please wait...
                   </p>
                 ) : analysisResult?.error ? (
@@ -371,31 +377,46 @@ export default function ShwaasVedaApp() {
                       >
                         Diagnosis
                       </h3>
-                      <p className="text-slate-700 dark:text-slate-300">
+                      <p className="text-zinc-700 dark:text-zinc-300">
                         <span className="font-medium">Prediction:</span>{" "}
                         {analysisResult.prediction}
                       </p>
-                      <p className="text-slate-600 dark:text-slate-400">
+                      <p className="text-zinc-600 dark:text-zinc-400">
                         <span className="font-medium">Confidence:</span>{" "}
                         {(analysisResult.confidence * 100).toFixed(2)}%
                       </p>
                     </div>
 
-                    <details className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
-                      <summary className="cursor-pointer text-slate-800 dark:text-white font-semibold text-base">
+                    <details className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4">
+                      <summary className="cursor-pointer text-zinc-800 dark:text-white font-semibold text-base">
                         View Full Medical Report
                       </summary>
-                      <pre className="whitespace-pre-wrap text-sm mt-4 text-slate-700 dark:text-slate-300">
-                        {analysisResult.gemini_analysis}
-                      </pre>
+                      <div className="whitespace-pre-wrap text-sm mt-4 text-zinc-700 dark:text-zinc-300">
+                        <Markdown>{analysisResult.gemini_analysis}</Markdown>
+                      </div>
                     </details>
                   </div>
                 ) : (
-                  <p className="text-slate-500 dark:text-slate-400">
+                  <p className="text-zinc-500 dark:text-zinc-400">
                     No result available yet.
                   </p>
                 )}
               </CardContent>
+              {analysisResult?.prediction &&
+                (analysisResult.prediction
+                  .toLowerCase()
+                  .includes("pneumonia") ? (
+                  <CardFooter className="flex justify-between items-center">
+                    <Button
+                      onClick={() => {
+                        window.location.href = "/appointments";
+                      }}
+                      className="w-full"
+                    >
+                      Book Appointment
+                    </Button>
+                  </CardFooter>
+                ) : null)}
             </Card>
           )}
         </div>
