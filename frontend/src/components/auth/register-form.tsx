@@ -12,7 +12,7 @@ import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import React from "react";
 
-export function LoginForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -21,10 +21,8 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
-            Login with your Google account
-          </CardDescription>
+          <CardTitle className="text-xl">Create an account</CardTitle>
+          <CardDescription>Register with your Google account</CardDescription>
         </CardHeader>
         <CardContent>
           <form>
@@ -80,9 +78,9 @@ export function LoginForm({
               </div>
 
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <a href="/register" className="underline underline-offset-4">
-                  Sign up
+                Already have an account?{" "}
+                <a href="/login" className="underline underline-offset-4">
+                  Login
                 </a>
               </div>
             </div>
