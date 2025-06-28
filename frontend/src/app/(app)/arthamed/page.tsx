@@ -109,13 +109,11 @@ export default function HomePage() {
       const buffer = await fileBlob.arrayBuffer();
       const base64 = Buffer.from(buffer).toString("base64");
 
-      setAnalysisStage("Sending to Gemini...");
+      setAnalysisStage("Sending your document...");
       setAnalysisProgress(50);
 
-      // ⏳ Wait for Gemini early, but store it, don’t display yet
       const responseText = await analyzeMedicalImage(base64, file.type);
 
-      // Finish progress bar + simulate work
       const steps = [
         { stage: "Parsing results...", progress: 75 },
         { stage: "Summarizing findings...", progress: 90 },
@@ -140,7 +138,7 @@ export default function HomePage() {
         description: "Medical data extracted successfully.",
       });
     } catch (err) {
-      toast.error("Gemini API failed", {
+      toast.error("API failed", {
         id: toastId,
         description: "Please try again later.",
       });
@@ -151,81 +149,83 @@ export default function HomePage() {
   };
 
   const renderAnalysisActions = () => {
-    if (isAnalyzing) {
-      return (
-        <AnalysisProgress
-          progress={analysisProgress}
-          stage={analysisStage}
-          fileCount={uploadedFiles.length}
-        />
-      );
-    }
-
     if (analysisComplete) return null;
 
     return (
       <Button
         onClick={handleStartAnalysis}
         size="lg"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+        disabled={isAnalyzing}
+        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white px-8"
       >
-        Start Analysis
+        {isAnalyzing ? "Analyzing..." : "Start Analysis"}
         <Zap className="w-4 h-4 ml-2" />
       </Button>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-background dark:via-background dark:to-background">
       <main className="container mx-auto px-4 py-8 flex flex-col items-center">
-        <div className="text-center mb-12 w-full max-w-4xl">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            ArthaMed – Simplify Medical Documents with AI
+        <div className="text-center mb-12 w-full max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-foreground dark:text-zinc-300 mb-4">
+            <span className="text-emerald-600">Artha Med</span> – Simplify
+            Medical Documents with AI
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Upload prescriptions, lab reports, or clinical notes and get
-            human-readable explanations with AI.
+          <p className="text-xl text-muted-foreground mb-8 mt-8">
+            Decode your medical paperwork with AI: Upload prescriptions, test
+            results, or clinical notes and get explanations in language you can
+            actually understand.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             {[
               {
-                icon: <Shield className="w-4 h-4 text-green-600" />,
+                icon: <Shield className="w-4 h-4 text-white" />,
                 label: "Medical Jargon Simplifier",
+                bgColor: "bg-green-600 dark:bg-green-700",
+                hoverColor: "hover:bg-green-700 dark:hover:bg-green-800",
+                borderColor: "border-green-600 dark:border-green-700",
               },
               {
-                icon: <Zap className="w-4 h-4 text-blue-600" />,
+                icon: <Zap className="w-4 h-4 text-white" />,
                 label: "Instant Analysis",
+                bgColor: "bg-blue-600 dark:bg-blue-700",
+                hoverColor: "hover:bg-blue-700 dark:hover:bg-blue-800",
+                borderColor: "border-blue-600 dark:border-blue-700",
               },
               {
-                icon: <Users className="w-4 h-4 text-purple-600" />,
+                icon: <Users className="w-4 h-4 text-white" />,
                 label: "Patient-Friendly",
+                bgColor: "bg-purple-600 dark:bg-purple-700",
+                hoverColor: "hover:bg-purple-700 dark:hover:bg-purple-800",
+                borderColor: "border-purple-600 dark:border-purple-700",
               },
-            ].map(({ icon, label }, i) => (
+            ].map(({ icon, label, bgColor, hoverColor, borderColor }, i) => (
               <div
                 key={i}
-                className="flex items-center space-x-2 bg-white rounded-full px-4 py-2 shadow-sm border"
+                className={`flex items-center space-x-2 ${bgColor} ${hoverColor} ${borderColor} rounded-full px-4 py-2 shadow-sm border transition-colors duration-200`}
               >
                 {icon}
-                <span className="text-sm font-medium">{label}</span>
+                <span className="text-sm font-medium text-white">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="w-full max-w-3xl">
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+          <Card className="shadow-lg border-0 bg-white/80 dark:bg-background/80 backdrop-blur-sm dark:border-gray-800">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Upload className="w-5 h-5 text-blue-600" />
+              <CardTitle className="flex items-center space-x-2 dark:text-white">
+                <Upload className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 <span>Upload Medical Documents</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="dark:text-gray-300">
                 Drag and drop files or browse. Accepted formats: PDF, JPG, PNG.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {uploadedFiles.length === 0 && (
+              {uploadedFiles.length === 0 ? (
                 <FileUpload
                   onFileUpload={handleFileUpload}
                   isUploading={isUploading}
@@ -235,9 +235,7 @@ export default function HomePage() {
                     "image/png": [".png"],
                   }}
                 />
-              )}
-
-              {uploadedFiles.length > 0 && (
+              ) : (
                 <div className="mt-6">
                   <UploadedFiles
                     files={uploadedFiles}
@@ -263,18 +261,20 @@ export default function HomePage() {
         )}
 
         {analysisComplete && (
-          <div className="mt-8 bg-white/80 shadow-lg rounded-xl p-6 w-full max-w-3xl space-y-4">
-            <h3 className="text-2xl font-bold text-green-700">
+          <div className="mt-8 bg-white/80 dark:bg-background shadow-lg rounded-xl p-6 w-full max-w-5xl space-y-4 border dark:border-gray-800">
+            <h3 className="text-2xl font-bold text-green-700 dark:text-green-400">
               Analysis Results
             </h3>
-            <p className="text-gray-700">{analysisResult.summary}</p>
+            <p className="text-gray-700 dark:text-gray-300">
+              {analysisResult.summary}
+            </p>
 
             {analysisResult.keyFindings.length > 0 && (
               <div className="mt-4">
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
                   Key Findings:
                 </h4>
-                <ul className="list-disc list-inside space-y-1 text-gray-700">
+                <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
                   {analysisResult.keyFindings.map((finding, index) => (
                     <li key={index}>{finding}</li>
                   ))}
@@ -282,7 +282,11 @@ export default function HomePage() {
               </div>
             )}
 
-            <Button onClick={resetAnalysis} variant="outline" className="mt-6">
+            <Button
+              onClick={resetAnalysis}
+              variant="outline"
+              className="mt-6 dark:border-gray-800 dark:text-white dark:hover:bg-gray-900"
+            >
               Analyze New Documents
             </Button>
           </div>
