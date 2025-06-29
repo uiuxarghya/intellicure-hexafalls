@@ -1,35 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth/cookies";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
-// Middleware to enforce authentication globally
-export async function middleware(request: NextRequest) {
-  const session = await getSessionCookie(request);
+const authRoutes = ["/login", "/register"];
+const protectedRoutes = [
+  "/dashboard",
+  "/appointments",
+  "/records",
+  "/arthamed",
+  "/smritiyan",
+  "/shwaas-veda",
+  "/neuro-setu",
+  "/settings",
+  "/help",
+];
 
-  // Paths that should be publicly accessible even without a session
-  const publicPaths = [
-    "/",
-    "/_next", // Next.js internals
-    "/api/auth", // Auth API routes
-    "/favicon.ico",
-    "/public",
-  ];
-
-  // Check if the requested path is public
-  const isPublicPath = publicPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
+export default async function middleware(request: NextRequest) {
+  const pathName = request.nextUrl.pathname;
+  const isAuthRoute = authRoutes.includes(pathName);
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathName.startsWith(route)
   );
 
-  // Redirect to "/" if not authenticated and not on a public path
-  if (!session && !isPublicPath) {
-    const loginUrl = new URL("/", request.url);
-    loginUrl.searchParams.set("redirected", "true");
-    return NextResponse.redirect(loginUrl);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    if (isAuthRoute) {
+      return NextResponse.next();
+    }
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (isAuthRoute) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
 }
 
-// Config to apply middleware to all routes except static files and auth
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth|public).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };
