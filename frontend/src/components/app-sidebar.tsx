@@ -9,7 +9,7 @@ import {
   IconPillFilled,
   IconReportMedical,
   IconSettings,
-  IconStethoscope
+  IconStethoscope,
 } from "@tabler/icons-react";
 import * as React from "react";
 
@@ -21,11 +21,9 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  useSidebar
 } from "@/components/ui/sidebar";
-import { HeartHandshakeIcon } from "lucide-react";
+import Logo, { LogoMark } from "./logo";
 
 const data = {
   navMain: [
@@ -63,7 +61,8 @@ const data = {
       title: "Neuro Setu",
       url: "/neuro-setu",
       icon: IconDna2,
-    },{
+    },
+    {
       title: "Records",
       url: "/records",
       icon: IconReportMedical,
@@ -84,22 +83,19 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const sidebar = useSidebar();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <a href="#">
-                <HeartHandshakeIcon className="!size-6" />
-                <span className="text-base font-semibold">IntelliCure</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        {sidebar.state === "collapsed" ? (
+          <a href="#">
+            <LogoMark className="h-6 m-2 text-foreground" />
+          </a>
+        ) : (
+          <a href="#">
+            <Logo className="h-6 m-2 text-foreground" />
+          </a>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
