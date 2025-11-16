@@ -9,6 +9,7 @@ import {
   IconLungs,
   IconPillFilled,
   IconStethoscope,
+  IconHeartbeat,
 } from "@tabler/icons-react";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -16,8 +17,8 @@ import Link from "next/link";
 export default function FeatureCards() {
   const aiFeatures = [
     {
-      id: "arthamed",
-      name: "Artha Med",
+      id: "meddoc",
+      name: "Medical Document Simplifier",
       description:
         "Simplifying medical jargon into clear, patient-friendly language with AI, so you can understand your health without confusion.",
       icon: IconPillFilled,
@@ -34,7 +35,7 @@ export default function FeatureCards() {
     },
     {
       id: "appointments",
-      name: "Appointment Booking",
+      name: "Doctor Appointment Booking",
       description:
         "Seamlessly book doctor appointments with AI-powered scheduling—fast, flexible, and tailored to your healthcare needs.",
       icon: IconStethoscope,
@@ -50,8 +51,8 @@ export default function FeatureCards() {
     },
 
     {
-      id: "smritiyan",
-      name: "Smritiyan",
+      id: "alzheimer",
+      name: "Alzheimer's Disease Detection",
       description:
         "AI-powered cognitive assessment for early Alzheimer's detection, helping preserve memory and quality of life through neural analysis.",
       icon: IconBrain,
@@ -65,23 +66,25 @@ export default function FeatureCards() {
         "bg-pink-100 text-pink-800 dark:bg-pink-900/50 dark:text-pink-300",
       link: "/smritiyan",
     },
-    // {
-    //   id: "rog-drishti",
-    //   name: "Rog Drishti",
-    //   description: "AI-driven symptom analysis for early disease prediction, helping detect health risks before they escalate with intelligent diagnostic insights.",
-    //   icon: IconHeartbeat,
-    //   color: "from-yellow-500 to-yellow-600 dark:from-yellow-600 dark:to-yellow-700",
-    //   bgColor: "bg-yellow-50 dark:bg-yellow-900/30",
-    //   borderColor: "border-yellow-200 dark:border-yellow-700",
-    //   textColor: "text-yellow-700 dark:text-yellow-300",
-    //   action: "Predict",
-    //   status: "ML Active",
-    //   statusColor: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300",
-    //   link: "/rog-drishti",
-    // },
     {
-      id: "shwaas-veda",
-      name: "Shwaas Veda",
+      id: "diseasepred",
+      name: "Disease Prediction",
+      description:
+        "AI-driven symptom analysis for early disease prediction, helping detect health risks before they escalate with intelligent diagnostic insights.",
+      icon: IconHeartbeat,
+      color: "from-red-500 to-red-600 dark:from-red-600 dark:to-red-700",
+      bgColor: "bg-red-50 dark:bg-red-900/30",
+      borderColor: "border-red-200 dark:border-red-700",
+      textColor: "text-red-700 dark:text-red-300",
+      action: "Predict",
+      status: "ML Active",
+      statusColor:
+        "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
+      link: "/rog-drishti",
+    },
+    {
+      id: "pneumonia",
+      name: "Pneumonia Classification",
       description:
         "AI-powered respiratory analysis for early pneumonia detection, using image processing to protect lung health before symptoms worsen.",
       icon: IconLungs,
@@ -97,8 +100,8 @@ export default function FeatureCards() {
       link: "/shwaas-veda",
     },
     {
-      id: "neuro-setu",
-      name: "Neuro Setu",
+      id: "brain-tumor",
+      name: "Brain Tumor Detection",
       description:
         "AI-powered brain scan analysis for precise tumor detection and classification, delivering life-saving insights in minutes.",
       icon: IconDna2,
@@ -118,56 +121,8 @@ export default function FeatureCards() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-6 py-8 space-y-8 ">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
-          {aiFeatures.slice(0, 2).map((feature) => (
-            <Card
-              key={feature.id}
-              className={`group relative overflow-hidden border-2 ${feature.borderColor} ${feature.bgColor} hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer`}
-            >
-              <CardContent className="px-6">
-                <div className="flex justify-between items-start mb-6">
-                  <Badge
-                    className={`${feature.statusColor} font-medium px-3 py-1`}
-                  >
-                    {feature.status}
-                  </Badge>
-                  <div
-                    className={`p-3 rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <feature.icon className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h3
-                    className={`text-2xl font-bold ${feature.textColor} group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors`}
-                  >
-                    {feature.name}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
-                    {feature.description}
-                  </p>
-                </div>
-
-                <div className="mt-8">
-                  <Link href={feature.link} passHref>
-                    <Button
-                      className={`w-full bg-gradient-to-r ${feature.color} hover:shadow-lg text-white font-semibold py-3 rounded-xl group-hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-                    >
-                      {feature.action}
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent dark:from-white/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/10 to-transparent dark:from-white/5 rounded-full translate-y-12 -translate-x-12 group-hover:scale-125 transition-transform duration-500"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {aiFeatures.slice(2).map((feature) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {aiFeatures.map((feature) => (
             <Card
               key={feature.id}
               className={`group relative overflow-hidden border-2 ${feature.borderColor} ${feature.bgColor} hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer`}
