@@ -203,8 +203,7 @@ export default function ShwaasVedaApp() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12 w-full max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold text-foreground dark:text-zinc-300 mb-4">
-              <span className="text-yellow-600">Shwaas Veda</span> – AI-Powered
-              Pneumonia Screening
+              <span className="text-yellow-600">Pneumonia Classification via Chest XRay</span>
             </h2>
             <p className="text-xl text-muted-foreground mb-8 mt-8">
               Detects pneumonia from chest X-rays with high accuracy, aiding in

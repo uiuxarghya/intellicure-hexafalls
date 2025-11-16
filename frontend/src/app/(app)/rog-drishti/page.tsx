@@ -1,15 +1,39 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Check, ChevronsUpDown, X, Activity, AlertCircle, CheckCircle2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import {
+  Check,
+  ChevronsUpDown,
+  X,
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 const symptoms = [
   "itching",
@@ -143,132 +167,161 @@ const symptoms = [
   "blister",
   "red sore around nose",
   "yellow crust ooze",
-]
+];
 
 interface Result {
-  predicted_disease: string
-  confidence: number
-  description?: string
+  predicted_disease: string;
+  confidence: number;
+  description?: string;
 }
 
 export default function DiseasePredictorApp() {
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([])
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [result, setResult] = useState<Result | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState<Result | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSymptomSelect = (symptom: string) => {
     if (selectedSymptoms.includes(symptom)) {
-      setSelectedSymptoms(selectedSymptoms.filter((s) => s !== symptom))
+      setSelectedSymptoms(selectedSymptoms.filter((s) => s !== symptom));
     } else {
-      setSelectedSymptoms([...selectedSymptoms, symptom])
+      setSelectedSymptoms([...selectedSymptoms, symptom]);
     }
-  }
+  };
 
   const removeSymptom = (symptom: string) => {
-    setSelectedSymptoms(selectedSymptoms.filter((s) => s !== symptom))
-  }
+    setSelectedSymptoms(selectedSymptoms.filter((s) => s !== symptom));
+  };
 
   const handleSubmit = async () => {
     if (selectedSymptoms.length === 0) {
-      setError("Please select at least one symptom.")
-      return
+      setError("Please select at least one symptom.");
+      return;
     }
 
-    setLoading(true)
-    setError(null)
-    setResult(null)
-    setProgress(0)
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    setProgress(0);
 
     // Simulate progress
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 90) {
-          clearInterval(progressInterval)
-          return 90
+          clearInterval(progressInterval);
+          return 90;
         }
-        return prev + 10
-      })
-    }, 200)
+        return prev + 10;
+      });
+    }, 200);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/disease/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ symptoms: selectedSymptoms }),
-      })
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/disease/predict`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symptoms: selectedSymptoms }),
+        }
+      );
 
-      if (!res.ok) throw new Error("API request failed")
+      if (!res.ok) throw new Error("API request failed");
 
-      const data = await res.json()
-      setResult(data)
-      setProgress(100)
+      const data = await res.json();
+      setResult(data);
+      setProgress(100);
     } catch {
-      setError("Something went wrong while fetching the prediction.")
-      clearInterval(progressInterval)
+      setError("Something went wrong while fetching the prediction.");
+      clearInterval(progressInterval);
     } finally {
       setTimeout(() => {
-        setLoading(false)
-        setProgress(0)
-      }, 500)
+        setLoading(false);
+        setProgress(0);
+      }, 500);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 p-4 transition-colors">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
-            <Activity className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Rog Drishti</h1>
+            <Activity className="h-8 w-8 text-zinc-800 dark:text-zinc-200" />
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+              Disease Prediction through Symptoms
+            </h1>
           </div>
-          <p className="text-gray-600">AI-powered disease prediction based on symptoms</p>
+          <p className="text-zinc-600 dark:text-zinc-400">
+            AI-powered disease prediction based on symptoms
+          </p>
         </div>
 
         {/* Main Card */}
-        <Card className="shadow-lg">
+        <Card className="shadow-lg bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
               <Activity className="h-5 w-5" />
               Symptom Analysis
             </CardTitle>
-            <CardDescription>Select the symptoms you&apos;re experiencing to get a disease prediction</CardDescription>
+            <CardDescription className="text-zinc-600 dark:text-zinc-400">
+              Select the symptoms you&apos;re experiencing to get a disease
+              prediction
+            </CardDescription>
           </CardHeader>
+
           <CardContent className="space-y-6">
             {/* Symptom Selector */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-gray-700">Select Symptoms</label>
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                Select Symptoms
+              </label>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between h-auto min-h-[40px] p-3 bg-transparent"
+                    className="w-full justify-between h-auto min-h-[40px] p-3 bg-transparent dark:border-zinc-700"
                   >
-                    <span className="text-left">
+                    <span className="text-left text-zinc-800 dark:text-zinc-200">
                       {selectedSymptoms.length === 0
                         ? "Search and select symptoms..."
-                        : `${selectedSymptoms.length} sympt${selectedSymptoms.length === 1 ? "" : "s"} selected`}
+                        : `${selectedSymptoms.length} sympt${
+                            selectedSymptoms.length === 1 ? "" : "s"
+                          } selected`}
                     </span>
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-full p-0" align="start">
+
+                <PopoverContent
+                  className="w-full p-0 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                  align="start"
+                >
                   <Command>
-                    <CommandInput placeholder="Search symptoms..." />
+                    <CommandInput
+                      placeholder="Search symptoms..."
+                      className="dark:placeholder-zinc-500"
+                    />
                     <CommandList>
                       <CommandEmpty>No symptoms found.</CommandEmpty>
                       <CommandGroup className="max-h-64 overflow-auto">
                         {symptoms.map((symptom) => (
-                          <CommandItem key={symptom} value={symptom} onSelect={() => handleSymptomSelect(symptom)}>
+                          <CommandItem
+                            key={symptom}
+                            value={symptom}
+                            onSelect={() => handleSymptomSelect(symptom)}
+                            className="dark:hover:bg-zinc-800"
+                          >
                             <Check
                               className={cn(
                                 "mr-2 h-4 w-4",
-                                selectedSymptoms.includes(symptom) ? "opacity-100" : "opacity-0",
+                                selectedSymptoms.includes(symptom)
+                                  ? "opacity-100"
+                                  : "opacity-0"
                               )}
                             />
                             {symptom}
@@ -284,14 +337,21 @@ export default function DiseasePredictorApp() {
             {/* Selected Symptoms */}
             {selectedSymptoms.length > 0 && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                   Selected Symptoms ({selectedSymptoms.length})
                 </label>
-                <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg min-h-[60px]">
+                <div className="flex flex-wrap gap-2 p-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg min-h-[60px]">
                   {selectedSymptoms.map((symptom) => (
-                    <Badge key={symptom} variant="secondary" className="flex items-center gap-1 px-3 py-1">
+                    <Badge
+                      key={symptom}
+                      variant="secondary"
+                      className="flex items-center gap-1 px-3 py-1 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200"
+                    >
                       {symptom}
-                      <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => removeSymptom(symptom)} />
+                      <X
+                        className="h-3 w-3 cursor-pointer hover:text-red-500"
+                        onClick={() => removeSymptom(symptom)}
+                      />
                     </Badge>
                   ))}
                 </div>
@@ -310,9 +370,9 @@ export default function DiseasePredictorApp() {
             {/* Progress Bar */}
             {loading && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Analyzing symptoms...</span>
-                  <span className="text-gray-600">{progress}%</span>
+                <div className="flex items-center justify-between text-sm text-zinc-700 dark:text-zinc-300">
+                  <span>Analyzing symptoms...</span>
+                  <span>{progress}%</span>
                 </div>
                 <Progress value={progress} className="h-2" />
               </div>
@@ -320,7 +380,10 @@ export default function DiseasePredictorApp() {
 
             {/* Error Display */}
             {error && (
-              <Alert variant="destructive">
+              <Alert
+                variant="destructive"
+                className="dark:bg-red-900/20 dark:text-red-300"
+              >
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -328,39 +391,55 @@ export default function DiseasePredictorApp() {
 
             {/* Results */}
             {result && (
-              <Card className="border-green-200 bg-green-50">
+              <Card className="border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-700">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-green-800">
+                  <CardTitle className="flex items-center gap-2 text-green-800 dark:text-green-300">
                     <CheckCircle2 className="h-5 w-5" />
                     Analysis Complete
                   </CardTitle>
                 </CardHeader>
+
                 <CardContent className="space-y-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-zinc-700 dark:text-zinc-300">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">Predicted Disease:</span>
-                      <Badge variant="outline" className="text-base px-3 py-1">
+                      <span className="text-sm font-medium">
+                        Predicted Disease:
+                      </span>
+                      <Badge
+                        variant="outline"
+                        className="text-base px-3 py-1 border-green-300 dark:border-green-700 text-green-800 dark:text-green-300"
+                      >
                         {result.predicted_disease}
                       </Badge>
                     </div>
+
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">Confidence:</span>
+                      <span className="text-sm font-medium">Confidence:</span>
                       <div className="flex items-center gap-2">
-                        <Progress value={result.confidence * 100} className="w-20 h-2" />
-                        <span className="text-sm font-medium">{(result.confidence * 100).toFixed(1)}%</span>
+                        <Progress
+                          value={result.confidence * 100}
+                          className="w-20 h-2"
+                        />
+                        <span className="text-sm font-medium">
+                          {(result.confidence * 100).toFixed(1)}%
+                        </span>
                       </div>
                     </div>
                   </div>
+
                   {result.description && (
-                    <div className="pt-2 border-t border-green-200">
-                      <p className="text-sm text-gray-700">{result.description}</p>
+                    <div className="pt-2 border-t border-green-200 dark:border-green-800">
+                      <p className="text-sm text-zinc-700 dark:text-zinc-300">
+                        {result.description}
+                      </p>
                     </div>
                   )}
-                  <Alert className="border-amber-200 bg-amber-50">
-                    <AlertCircle className="h-4 w-4 text-amber-600" />
-                    <AlertDescription className="text-amber-800">
-                      This is an AI prediction and should not replace professional medical advice. Please consult with a
-                      healthcare provider for proper diagnosis and treatment.
+
+                  <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700">
+                    <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    <AlertDescription className="text-amber-800 dark:text-amber-300">
+                      This is an AI prediction and should not replace
+                      professional medical advice.
                     </AlertDescription>
                   </Alert>
                 </CardContent>
@@ -370,5 +449,5 @@ export default function DiseasePredictorApp() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

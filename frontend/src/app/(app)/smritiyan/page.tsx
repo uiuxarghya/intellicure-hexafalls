@@ -230,8 +230,7 @@ export default function SmritiyanApp() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12 w-full max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold text-foreground dark:text-zinc-300 mb-4">
-              <span className="text-pink-600">Smritiyan</span> –
-              Alzheimer&apos;s Grading via MRI Analysis
+              <span className="text-pink-600">Alzheimer&apos;s Detection via MRI Grading</span>
             </h2>
             <p className="text-xl text-muted-foreground mb-8 mt-8">
               Streamline dementia diagnosis: Upload brain scans for instant,

@@ -210,8 +210,7 @@ export default function HomePage() {
       <main className="container mx-auto px-4 py-8 flex flex-col items-center">
         <div className="text-center mb-12 w-full max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold text-foreground dark:text-zinc-300 mb-4">
-            <span className="text-emerald-600">Artha Med</span> – Simplify
-            Medical Documents with AI
+            <span className="text-emerald-600">Medical Document Simplifier</span>
           </h2>
           <p className="text-lg text-muted-foreground my-4">
             Decode your medical paperwork with AI: Upload prescriptions, test
