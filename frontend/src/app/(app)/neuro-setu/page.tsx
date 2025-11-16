@@ -221,8 +221,7 @@ export default function NeuroSetuApp() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-foreground mb-4">
-              <span className="text-purple-600">Neuro Setu</span> – Automated
-              Brain Tumor Recognition
+              <span className="text-purple-600">Brain Tumor Recognition through MRI Scan</span>
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground">
               Cutting-edge AI for automated brain tumor detection in MRI images.
